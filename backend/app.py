@@ -8,12 +8,16 @@ from doctors import doctors_bp
 from auth_utils import login_required
 from feedback import feedback_bp
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 # -----------------------
 # Create App FIRST
 # -----------------------
 app = Flask(__name__)
 app.config.from_object(Config)
-app.secret_key = "mediskin-secret-key"
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 # -----------------------
 # Init DB
