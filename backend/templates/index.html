@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <!-- LEFT TEXT -->
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold mb-3 text-dark">
+                    <i class="fas fa-stethoscope" style="color: #2b7de9;"></i> AI-Powered Skin Disease Detection
+                </h1>
+
+                <p class="lead text-muted mb-4">
+                    Upload a skin image and get instant AI-based predictions with doctor recommendations. Our advanced AI model analyzes your image with high accuracy.
+                </p>
+
+                <div class="mb-4">
+                    <div class="feature-tag">
+                        <i class="fas fa-bolt"></i> Instant Analysis
+                    </div>
+                    <div class="feature-tag">
+                        <i class="fas fa-check-circle"></i> 95%+ Accuracy
+                    </div>
+                    <div class="feature-tag">
+                        <i class="fas fa-user-md"></i> Doctor Recommendations
+                    </div>
+                </div>
+
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-info-circle"></i> <strong>Medical Disclaimer:</strong> This tool provides AI-assisted predictions for informational purposes only and is not a medical diagnosis. Always consult a qualified dermatologist.
+                </div>
+            </div>
+
+            <!-- RIGHT UPLOAD CARD -->
+            <div class="col-lg-6">
+                <div class="upload-card">
+                    <div class="upload-header">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Skin Image
+                    </div>
+
+                    <form method="POST" action="/predict" enctype="multipart/form-data" id="uploadForm">
+                        <div class="upload-box" id="dropZone">
+                            <i class="fas fa-image mb-3" style="font-size: 3rem; color: #2b7de9;"></i>
+                            <p class="fw-bold">Drag & drop your image here</p>
+                            <p class="text-muted">or</p>
+                            <label for="imageInput" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-folder-open"></i> Browse Files
+                            </label>
+                            <input type="file" name="image" id="imageInput" class="form-control d-none" accept="image/jpeg,image/png" required>
+                            <small class="text-muted d-block mt-2">Supported: JPG, PNG (Max 5MB)</small>
+                        </div>
+
+                        <div id="imagePreview" class="mt-3 d-none text-center">
+                            <img id="previewImg" src="" alt="Preview" class="img-thumbnail rounded" style="max-height: 200px;">
+                            <p class="mt-2"><strong id="fileName"></strong></p>
+                        </div>
+
+                        <button type="submit" class="btn btn-gradient w-100 mt-4 btn-lg fw-bold">
+                            <i class="fas fa-check-circle"></i> Analyze Image
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

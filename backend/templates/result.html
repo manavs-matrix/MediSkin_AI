@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-5">
+                    
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <i class="fas fa-check-circle" style="font-size: 3rem; color: #19c37d;"></i>
+                        <h2 class="mt-3 fw-bold">Analysis Complete</h2>
+                        <p class="text-muted">Here are your prediction results</p>
+                    </div>
+
+                    <!-- Uploaded Image -->
+                    <div class="text-center mb-4">
+                        <div class="image-wrapper rounded-3 overflow-hidden shadow-sm">
+                            <img src="{{ image_url }}" alt="Uploaded skin image" class="img-fluid rounded-2" style="max-width: 100%; height: auto; display: block;">
+                        </div>
+                    </div>
+
+                    <!-- Disease Name with Icon -->
+                    <div class="text-center mb-4">
+                        <div class="prediction-badge">
+                            <span class="badge bg-primary fs-5 p-4 fw-bold">
+                                <i class="fas fa-flask-vial"></i> {{ prediction }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Confidence Score Section -->
+                    <div class="confidence-section mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="fw-bold">Confidence Score</label>
+                            <span class="badge bg-info">{{ confidence }}%</span>
+                        </div>
+                        <div class="progress" style="height: 28px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated fw-bold"
+                                 role="progressbar"
+                                 style="width: {{ confidence }}%;"
+                                 aria-valuenow="{{ confidence }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                                {{ confidence }}%
+                            </div>
+                        </div>
+                        {% if confidence >= 80 %}
+                        <p class="mt-2 text-success"><i class="fas fa-check-circle"></i> High confidence prediction</p>
+                        {% elif confidence >= 60 %}
+                        <p class="mt-2 text-warning"><i class="fas fa-exclamation-circle"></i> Moderate confidence - consider professional consultation</p>
+                        {% else %}
+                        <p class="mt-2 text-danger"><i class="fas fa-info-circle"></i> Low confidence - professional consultation strongly recommended</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 mb-4">
+                        <a href="/doctors?disease={{ prediction }}" class="btn btn-gradient btn-lg fw-bold">
+                            <i class="fas fa-user-md"></i> Find Dermatologists
+                        </a>
+                        <a href="/" class="btn btn-outline-primary btn-lg fw-bold">
+                            <i class="fas fa-home"></i> Analyze Another Image
+                        </a>
+                    </div>
+
+                    <!-- Feedback Section -->
+                    <div class="card border-light bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-3">
+                                <i class="fas fa-comments"></i> Share Your Feedback
+                            </h5>
+                            <form id="feedbackForm" method="POST" action="/submit_feedback" onsubmit="submitFeedback(event)">
+                                <!-- Hidden prediction field -->
+                                <input type="hidden" name="prediction" value="{{ prediction }}">
+                                
+                                <!-- Accuracy Rating -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Was this prediction accurate?</label>
+                                    <div class="btn-group w-100" role="group" aria-label="Accuracy rating">
+                                        <input type="radio" class="btn-check" name="accuracy" id="accuracy_yes" value="yes">
+                                        <label class="btn btn-outline-success" for="accuracy_yes">
+                                            <i class="fas fa-thumbs-up"></i> Yes
+                                        </label>
+
+                                        <input type="radio" class="btn-check" name="accuracy" id="accuracy_no" value="no">
+                                        <label class="btn btn-outline-danger" for="accuracy_no">
+                                            <i class="fas fa-thumbs-down"></i> No
+                                        </label>
+
+                                        <input type="radio" class="btn-check" name="accuracy" id="accuracy_unsure" value="unsure">
+                                        <label class="btn btn-outline-warning" for="accuracy_unsure">
+                                            <i class="fas fa-question-circle"></i> Unsure
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Comments -->
+                                <div class="mb-3">
+                                    <label for="feedbackComments" class="form-label fw-bold">Comments (Optional)</label>
+                                    <textarea class="form-control" id="feedbackComments" name="comments" rows="3" placeholder="Share any additional feedback or details..." maxlength="500"></textarea>
+                                    <small class="text-muted">Max 500 characters</small>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary w-100 fw-bold">
+                                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Important Disclaimer -->
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-exclamation-triangle me-3" style="font-size: 1.5rem; color: #ff9800;"></i>
+                            <div>
+                                <strong>Important Medical Disclaimer:</strong>
+                                <p class="mb-0 mt-2 small">This AI prediction is for informational and educational purposes only and <strong>is not a medical diagnosis</strong>. The results should never be used as a substitute for professional medical advice, diagnosis, or treatment. Please consult a qualified dermatologist or healthcare provider for proper evaluation and diagnosis of any skin conditions.</p>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function submitFeedback(event) {
+    event.preventDefault(); // Prevent default form submission
+    
+    const accuracy = document.querySelector('input[name="accuracy"]:checked')?.value;
+    const comments = document.getElementById("feedbackComments").value;
+    const prediction = document.querySelector('input[name="prediction"]').value;
+
+    // Validate that accuracy is selected
+    if (!accuracy) {
+        alert("Please select an accuracy rating");
+        return;
+    }
+
+    // Create FormData to send form data (not JSON)
+    const formData = new FormData();
+    formData.append("prediction", prediction);
+    formData.append("accuracy", accuracy);
+    formData.append("comments", comments);
+
+    fetch("/submit_feedback", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert("Thank you for your feedback! We appreciate your input.");
+            // Reset form
+            document.getElementById("feedbackForm").reset();
+        } else {
+            alert("Error: " + (data.message || "Failed to submit feedback"));
+        }
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Error submitting feedback. Please try again.");
+    });
+}
+</script>
+
+{% endblock %}

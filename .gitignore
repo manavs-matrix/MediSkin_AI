@@ -1,0 +1,11 @@
+.venv/
+dataset/
+model/
+.env
+data/users.db
+dataset/
+sample_images/
+backend/__pycache__/
+*.db
+*.pyc
+backend/static/uploads/

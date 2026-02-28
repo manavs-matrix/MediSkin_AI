@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <h1 class="display-6 fw-bold mb-2">
+                <i class="fas fa-user-md" style="color: #2b7de9;"></i> Recommended Dermatologists
+            </h1>
+            <p class="text-muted lead">Find and connect with qualified dermatologists in your area</p>
+        </div>
+    </div>
+
+    <!-- ================= FILTER BAR ================= -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <input type="hidden" name="disease" value="{{ disease }}">
+
+                <div class="col-md-5">
+                    <label for="citySelect" class="form-label fw-bold">
+                        <i class="fas fa-map-marker-alt"></i> Filter by City
+                    </label>
+                    <select id="citySelect" name="city" class="form-select form-select-lg">
+                        <option value="All">All Cities</option>
+                        {% for city in cities %}
+                        <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>
+                            {{ city }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-gradient w-100 fw-bold">
+                        <i class="fas fa-search"></i> Filter
+                    </button>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <a href="/doctors" class="btn btn-outline-secondary w-100 fw-bold">
+                        <i class="fas fa-redo"></i> Reset Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= DOCTOR CARDS VIEW ================= -->
+    {% if doctors %}
+    <div class="row g-4">
+        {% for doc in doctors %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card doctor-card h-100 shadow-sm rounded-4 border-0 hover-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="avatar-circle bg-primary text-white me-3">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0 fw-bold">{{ doc.name }}</h5>
+                            <small class="text-muted">{{ doc.specialization }}</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <i class="fas fa-map-marker-alt text-primary"></i>
+                        <span class="ms-2">{{ doc.city }}</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <i class="fas fa-phone text-primary"></i>
+                        <span class="ms-2">{{ doc.contact }}</span>
+                    </div>
+                    
+                    <a href="tel:{{ doc.contact }}" class="btn btn-gradient w-100 btn-sm fw-bold">
+                        <i class="fas fa-phone"></i> Call Now
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info alert-lg text-center py-5" role="alert">
+        <i class="fas fa-info-circle" style="font-size: 2rem; color: #0c5dd6;"></i>
+        <h5 class="mt-3 fw-bold">No Doctors Found</h5>
+        <p class="mb-0 text-muted">We couldn't find dermatologists matching your filter. Please try a different city or clear filters.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
