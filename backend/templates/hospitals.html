@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <h1 class="display-6 fw-bold mb-2">
+                <i class="fas fa-hospital" style="color: #2b7de9;"></i> Nearby Hospitals
+            </h1>
+            <p class="text-muted lead">Find and connect with nearby hospitals in your area</p>
+        </div>
+    </div>
+
+    <!-- ================= FILTER BAR ================= -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+
+                <div class="col-md-4">
+                    <label for="stateSelect" class="form-label fw-bold">
+                        <i class="fas fa-map"></i> Select State
+                    </label>
+                    <select id="stateSelect" name="state" class="form-select form-select-lg" onchange="updateDistricts()">
+                        <option value="All">All States</option>
+                        {% for state in states %}
+                        <option value="{{ state }}" {% if state == selected_state %}selected{% endif %}>
+                            {{ state }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="districtSelect" class="form-label fw-bold">
+                        <i class="fas fa-map-marker-alt"></i> Select District
+                    </label>
+                    <select id="districtSelect" name="district" class="form-select form-select-lg">
+                        <option value="All">All Districts</option>
+                        {% for district in districts %}
+                        <option value="{{ district }}" {% if district == selected_district %}selected{% endif %}>
+                            {{ district }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-gradient w-100 fw-bold">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <a href="/hospitals" class="btn btn-outline-secondary w-100 fw-bold">
+                        <i class="fas fa-redo"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= HOSPITAL CARDS VIEW ================= -->
+    {% if hospitals %}
+    <div class="row g-4">
+        {% for hospital in hospitals %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card hospital-card h-100 shadow-sm rounded-4 border-0 hover-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="avatar-circle bg-danger text-white me-3">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0 fw-bold">{{ hospital.name }}</h5>
+                            <small class="text-muted">Healthcare Facility</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <i class="fas fa-map"></i>
+                        <span class="ms-2"><strong>{{ hospital.state }}</strong></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt text-danger"></i>
+                        <span class="ms-2">{{ hospital.district }}</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <i class="fas fa-location-dot text-danger"></i>
+                        <span class="ms-2 small">{{ hospital.address }}</span>
+                    </div>
+                    
+                    <a href="{{ hospital.google_maps_url }}" target="_blank" class="btn btn-gradient w-100 btn-sm fw-bold">
+                        <i class="fas fa-map"></i> View on Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info alert-lg text-center py-5" role="alert">
+        <i class="fas fa-info-circle" style="font-size: 2rem; color: #0c5dd6;"></i>
+        <h5 class="mt-3 fw-bold">No Hospitals Found</h5>
+        <p class="mb-0 text-muted">We couldn't find hospitals matching your filter. Please try a different state or district.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+function updateDistricts() {
+    // This function can be enhanced to dynamically update districts
+    // For now, form submission will handle it
+    document.querySelector('form').submit();
+}
+</script>
+
+{% endblock %}

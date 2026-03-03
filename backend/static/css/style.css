@@ -125,6 +125,12 @@ footer p {
     background: linear-gradient(135deg, #f0f8ff 0%, #e8f2ff 100%);
 }
 
+.upload-box.drag-over {
+    border-color: #19c37d;
+    background: linear-gradient(135deg, #e8f8f3 0%, #d9f0ea 100%);
+    box-shadow: 0 0 20px rgba(25, 195, 125, 0.2);
+}
+
 .upload-box p {
     margin: 8px 0;
     font-weight: 500;

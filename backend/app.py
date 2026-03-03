@@ -4,7 +4,7 @@ from models import db
 
 from auth import auth_bp
 from predict import predict_bp
-from doctors import doctors_bp
+from hospitals import hospitals_bp
 from auth_utils import login_required
 from feedback import feedback_bp
 
@@ -29,7 +29,7 @@ db.init_app(app)
 # -----------------------
 app.register_blueprint(auth_bp)
 app.register_blueprint(predict_bp)
-app.register_blueprint(doctors_bp)
+app.register_blueprint(hospitals_bp)
 app.register_blueprint(feedback_bp)
 
 # -----------------------
