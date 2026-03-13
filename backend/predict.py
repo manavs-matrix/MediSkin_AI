@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, flash
+# from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, session
+from models import db, PredictionHistory
 from werkzeug.utils import secure_filename
 import os
 import numpy as np
@@ -75,6 +77,19 @@ def predict():
     print("Predicted index:", pred_index)
     print("Confidence:", confidence)
     print("Class:", predicted_class)
+
+     # Save to history if user is logged in
+    user_id = session.get("user_id")
+    if user_id:
+        new_history = PredictionHistory(
+            user_id=user_id,
+            image_filename=filename,
+            prediction=predicted_class,
+            confidence=round(confidence * 100, 2)
+        )
+        db.session.add(new_history)
+        db.session.commit()
+
 
     return render_template(
     "result.html",

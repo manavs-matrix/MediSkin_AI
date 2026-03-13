@@ -26,9 +26,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="ms-auto d-flex gap-2">
                 {% if session.get('user_name') %}
-                    <span class="nav-text d-none d-md-inline me-2">Welcome, <strong>{{ session.get('user_name') }}</strong></span>
+                    <!-- <span class="nav-text d-none d-md-inline me-2">Welcome, <strong>{{ session.get('user_name') }}</strong></span>
                     <a class="btn btn-outline-primary btn-sm" href="/"><i class="fas fa-home"></i> Home</a>
-                    <a class="btn btn-outline-danger btn-sm" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    <a class="btn btn-outline-danger btn-sm" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a> -->
+                    <span class="nav-text d-none d-md-inline me-2 align-self-center">Welcome, <strong>{{ session.get('user_name') }}</strong></span>
+                    <a class="btn btn-outline-primary btn-sm align-self-center" href="/profile"><i class="fas fa-user-circle"></i> Profile</a>
+                    <a class="btn btn-outline-primary btn-sm align-self-center" href="/"><i class="fas fa-home"></i> Home</a>
+                    <a class="btn btn-outline-danger btn-sm align-self-center" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 {% else %}
                     <a class="btn btn-outline-primary btn-sm" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
                     <a class="btn btn-primary btn-sm" href="/register"><i class="fas fa-user-plus"></i> Register</a>

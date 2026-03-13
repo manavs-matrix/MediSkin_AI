@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <!-- Profile Sidebar -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-lg rounded-4 border-0 text-center h-100">
+                <div class="card-body p-5">
+                    <div class="avatar-circle mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2.5rem; color: white;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <!-- <h3 class="fw-bold text-dark">{{ session.get('user_name') }}</h3>
+                    <p class="text-muted mb-4">Patient Profile</p> -->
+                    <h3 class="fw-bold text-dark mb-1">{{ session.get('user_name') }}</h3>
+                    <p class="text-muted mb-2"><i class="fas fa-envelope me-2"></i>{{ user.email }}</p>
+                    <!-- <p class="badge bg-primary mb-4 p-2 px-3">Patient Profile</p> -->
+
+                    <button type="button" class="badge bg-primary mb-4 p-2 px-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="/hospitals" class="btn btn-outline-primary fw-bold">
+                            <i class="fas fa-hospital"></i> Find Hospitals
+                        </a>
+                        <a href="/" class="btn btn-gradient fw-bold">
+                            <i class="fas fa-plus-circle"></i> New Prediction
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="col-lg-8">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-4 p-md-5">
+                    <!-- <h4 class="fw-bold mb-4" style="color: #2b7de9;"> -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                        <div>
+                            <h4 class="fw-bold mb-1" style="color: #2b7de9;">
+                        <i class="fas fa-history"></i> Prediction History
+                        </h4>
+                        <p class="text-muted mb-0">A record of your previous skin disease analyses.</p>
+                        </div>
+                        {% if history %}
+                        <form action="{{ url_for('profile.clear_history') }}" method="POST" onsubmit="return confirm('Are you sure you want to clear your prediction history? This action cannot be undone.');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash-alt me-1"></i> Clear History
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+
+                    {% if history %}
+                        <div class="row g-4">
+                            {% for record in history %}
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light rounded-3 h-100 hover-card" style="transition: transform 0.2s, box-shadow 0.2s;">
+                                    <div class="card-body p-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted"><i class="fas fa-calendar-alt"></i> {{ record.timestamp.strftime('%B %d, %Y - %H:%M') }}</small>
+                                            {% if record.confidence >= 80 %}
+                                                <span class="badge bg-success">High</span>
+                                            {% elif record.confidence >= 60 %}
+                                                <span class="badge bg-warning text-dark">Medium</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Low</span>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="d-flex align-items-center mt-3">
+                                            <div class="me-3">
+                                                <img src="/static/uploads/{{ record.image_filename }}" alt="Skin Image" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">{{ record.prediction }}</h6>
+                                                <div class="progress" style="height: 6px; width: 100px;">
+                                                    <div class="progress-bar bg-primary" style="width: {{ record.confidence }}%;"></div>
+                                                </div>
+                                                <small class="text-muted">{{ record.confidence }}% Confidence</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-folder-open text-muted mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="text-muted">No predictions yet.</h5>
+                            <p class="text-muted mb-0">Upload an image to get started.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-light border-0">
+                <h5 class="modal-title fw-bold" id="editProfileModalLabel"><i class="fas fa-user-edit me-2 text-primary"></i>Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('profile.update_profile') }}" method="POST">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ session.get('user_name') }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-bold">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary fw-bold">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+    }
+</style>
+
+{% endblock %}

@@ -7,6 +7,7 @@ from predict import predict_bp
 from hospitals import hospitals_bp
 from auth_utils import login_required
 from feedback import feedback_bp
+from profile import profile_bp
 
 import os
 from dotenv import load_dotenv
@@ -31,6 +32,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(predict_bp)
 app.register_blueprint(hospitals_bp)
 app.register_blueprint(feedback_bp)
+app.register_blueprint(profile_bp)
 
 # -----------------------
 # Protected Home Route

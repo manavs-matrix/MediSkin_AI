@@ -1,7 +1,8 @@
 /* ===================== GENERAL STYLES ===================== */
 body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(135deg, #f5f9fc 0%, #eef6fb 100%);
+    /* background: linear-gradient(135deg, #f5f9fc 0%, #eef6fb 100%); */
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
     color: #333;
     line-height: 1.6;
 }
@@ -26,8 +27,11 @@ body {
 
 /* ===================== NAVBAR ===================== */
 .navbar {
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    /* backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95) !important; */
+    backdrop-filter: blur(15px);
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .navbar-brand {
@@ -67,6 +71,26 @@ footer p {
     overflow: hidden;
 }
 
+/* Add a subtle glassy glow overlay */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+
 .hero::before {
     content: '';
     position: absolute;
@@ -86,16 +110,21 @@ footer p {
 
 /* ===================== UPLOAD CARD ===================== */
 .upload-card {
-    background: white;
+    /* background: white; */
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
     padding: 35px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .upload-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+    /* box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15); */
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
 }
 
 .upload-header {
